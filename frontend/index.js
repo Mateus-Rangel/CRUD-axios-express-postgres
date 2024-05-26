@@ -1,28 +1,13 @@
-console.log("frontend");
 import axios from "axios";
 import "regenerator-runtime/runtime";
 
-const getHelloWorld = document.getElementById("getHelloWorld");
-getHelloWorld.addEventListener("click", () => {
-  axios({
-    method: "get",
-    url: "http://localhost:3000/",
-  }).then(function (response) {
-    console.log(response)
-    const result = (document.getElementById("result").innerHTML =
-      response.data);
-    console.log(result);
-  });
-});
 
 const getAll = document.getElementById("getAll");
 getAll.addEventListener("click", async () => {
-  console.log("pegar todos");
   await pegarTodos();
 });
 
 async function pegarTodos() {
-  console.log("teste");
   await axios({
     method: "get",
     url: "http://localhost:3000/pessoas",
@@ -32,7 +17,7 @@ async function pegarTodos() {
 }
 
 async function showResults(response) {
-    console.log(response)
+  console.log(response);
   let resultString = "";
   for (let i = 0; i < response.data.length; i++) {
     const element = response.data[i];
@@ -43,39 +28,59 @@ async function showResults(response) {
         <button id="removerRegistro${element.id}"  >Remover</button>
       </div>
       `;
-    // onclick="alterarRegistro(${element.id})"
     resultString += linha;
   }
   document.getElementById("result").innerHTML = "";
   document.getElementById("result").innerHTML = resultString;
-  console.log(response);
-  // const alterarPessoas = document.querySelectorAll(
-  //   'button[id*="alterarRegistro"]'
-  // );
-  // for (let i = 0; i <= alterarPessoas.length; i++) {
-  //   if (i == alterarPessoas.length) return;
-  //   const element = alterarPessoas[i];
-  //   console.log(element)
-  //   const index = element.getAttribute('id').split('alterarRegistro')[1]
-  //   console.log(index)
-  //   element.addEventListener("click", async () => {
-  //     console.log('alterar' + index)
-  //     await alterarRegistro(index);
-  //   });
-  // }
-  // const removerPessoas = document.querySelectorAll(
-  //   'button[id*="removerRegistro"]'
-  // );
-  // console.log(removerPessoas)
-  // for (let i = 0; i <= removerPessoas.length; i++) {
-  //   if (i == removerPessoas.length) return;
-  //   const element = removerPessoas[i];
-  //   console.log(element);
-  //   const index = element.getAttribute('id').split('alterarRegistro')[1]
-  //   console.log(index)
-  //   element.addEventListener("click", async() => {
-  //     console.log("teste" + index);
-  //     await removerRegistro(index)
-  //   });
-  // }
+}
+
+document.addEventListener("click", async function (event) {
+  if (String(event.target.id).includes("alterarRegistro")) {
+    const index = event.target.id.split("alterarRegistro")[1];
+    console.log(index);
+    await alterarRegistro(index);
+  }
+  if (String(event.target.id).includes("removerRegistro")) {
+    const index = event.target.id.split("removerRegistro")[1];
+    console.log(index);
+    await removerRegistro(index);
+  }
+});
+
+async function removerRegistro(id) {
+  console.log("remover teste" + id);
+  await axios
+    .delete("http://localhost:3000/pessoas", { data: { id: id } })
+    .then(async () => {
+      await pegarTodos();
+    });
+}
+
+async function alterarRegistro(id) {
+  const nome = document.getElementById("nome").value;
+  const idade = document.getElementById("idade").value;
+  const pessoa = {
+    nome: nome,
+    idade: idade,
+    id,
+  };
+  await axios.put("http://localhost:3000/pessoas", pessoa).then(async () => {
+    await pegarTodos();
+  });
+}
+
+const form = document.querySelector("form");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const nome = document.getElementById("nome").value;
+  const idade = document.getElementById("idade").value;
+  const pessoa = { nome, idade };
+  await addPessoa(pessoa);
+});
+
+async function addPessoa(data) {
+  await axios.post("http://localhost:3000/pessoas", data).then(async () => {
+    await pegarTodos();
+  });
 }
