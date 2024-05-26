@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devServer": "nodemon app.js"
+    "nodemon": "nodemon app.js"
   },
   "author": "Mateus Rangel",
   "license": "ISC",
