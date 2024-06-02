@@ -26,7 +26,6 @@ document.addEventListener("click", async function (event) {
 const form = document.querySelector("form");
 
 form.addEventListener("submit", async (event) => {
-  console.log('teste')
   event.preventDefault();
   const input = new inputs();
   const pessoa = { nome: input.nome, idade: input.idade };
