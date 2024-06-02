@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const routerPessoa = require("./src/model/routes/routerPessoas.js");
-const service = require("./src/model/services/service.js");
+
 
 const app = express();
 const PORT = 3000;
